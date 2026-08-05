@@ -1,4 +1,6 @@
 const express = require('express');
+const startReminderScheduler = require('./jobs/reminderScheduler');
+const startLowStockScheduler = require('./jobs/lowStockScheduler');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -68,5 +70,8 @@ app.use((req, res) => {
 });
 
 app.use(errorMiddleware);
+
+startReminderScheduler();
+startLowStockScheduler();
 
 module.exports = app;

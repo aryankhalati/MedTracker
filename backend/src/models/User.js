@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema (
     {
         name: {
             type: String,
@@ -33,11 +33,11 @@ const userSchema = new mongoose.Schema(
             default: null
         },
         otpExpiry: {
-            type: Date,
+            type: String,
             default: null
         }
     },
-    { timestamps: true }
+    {timestamps: true}
 );
 
 const User = mongoose.model('User', userSchema);
