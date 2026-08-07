@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const doseLogSchema = new mongoose.Schema(
+const doseLogSchema = new mongoose.Schema (
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -15,10 +15,6 @@ const doseLogSchema = new mongoose.Schema(
             index: true
         },
         scheduledTime: {
-            type: String,
-            required: true
-        },
-        scheduledDate: {
             type: Date,
             required: true
         },
@@ -32,7 +28,7 @@ const doseLogSchema = new mongoose.Schema(
             default: null
         }
     },
-    { timestamps: true }
+    {timestamps:true}
 );
 
 const DoseLog = mongoose.model('DoseLog', doseLogSchema);

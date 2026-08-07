@@ -2,24 +2,24 @@ const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema (
     {
-        name: {
+        name:{
             type: String,
             required: true,
             trim: true
         },
-        email: {
+        email:{
             type: String,
             required: true,
-            unique: true,
+            unique: true, 
             trim: true,
             lowercase: true
         },
-        password: {
+        password:{
             type: String,
             required: true,
-            minlength: 6
+            minlength : 6
         },
-        role: {
+        role:{
             type: String,
             enum: ['patient', 'admin'],
             default: 'patient'
@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema (
             default: null
         }
     },
-    {timestamps: true}
+    {timestamps:true}
 );
 
 const User = mongoose.model('User', userSchema);

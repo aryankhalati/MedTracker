@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const orderSchema = new mongoose.Schema(
+const orderSchema = new mongoose.Schema (
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ['pending', 'confirmed', 'out_for_delivery', 'delivered', 'cancelled'],
+            enum: ['pending', 'confirmed','out_for_delivery', 'delivered', 'cancelled'],
             default: 'pending'
         },
         deliveredAt: {
@@ -33,7 +33,7 @@ const orderSchema = new mongoose.Schema(
             default: null
         }
     },
-    { timestamps: true }
+    {timestamps: true}
 );
 
 const Order = mongoose.model('Order', orderSchema);

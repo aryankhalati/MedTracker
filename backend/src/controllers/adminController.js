@@ -22,6 +22,20 @@ const getAllOrders = async (req, res, next) => {
     }
 };
 
+const getOrderById = async (req, res, next) => {
+    try {
+        const order = await Order.findById(req.params.id).populate('userId', 'name email');
+
+        if (!order) {
+            return res.status(404).json({ message: 'Order not found' });
+        }
+
+        res.json(order);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const updateOrderStatus = async (req, res, next) => {
     try {
         const { status } = req.body;
@@ -50,4 +64,4 @@ const updateOrderStatus = async (req, res, next) => {
     }
 };
 
-module.exports = { getAllPatients, getAllOrders, updateOrderStatus };
+module.exports = { getAllPatients, getAllOrders, getOrderById, updateOrderStatus };

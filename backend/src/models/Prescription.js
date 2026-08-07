@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const prescriptionSchema = new mongoose.Schema(
+const prescriptionSchema = new mongoose.Schema (
     {
         userId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -28,7 +28,7 @@ const prescriptionSchema = new mongoose.Schema(
             required: true,
             min: 1
         },
-        doseTimes: {
+        doseTimes : {
             type: [String],
             required: true
         },
@@ -52,7 +52,7 @@ const prescriptionSchema = new mongoose.Schema(
             default: true
         }
     },
-    { timestamps: true }
+     {timestamps:true}
 );
 
 const Prescription = mongoose.model('Prescription', prescriptionSchema);

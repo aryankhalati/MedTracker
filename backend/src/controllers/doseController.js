@@ -15,18 +15,20 @@ const getTodayDoses = async (req, res, next) => {
 
         for (const prescription of activePrescriptions) {
             for (const time of prescription.doseTimes) {
+                const [hours, minutes] = time.split(':').map(Number);
+                const scheduledDateTime = new Date(startOfDay);
+                scheduledDateTime.setHours(hours, minutes, 0, 0);
+
                 const existing = await DoseLog.findOne({
                     prescriptionId: prescription._id,
-                    scheduledTime: time,
-                    scheduledDate: { $gte: startOfDay, $lte: endOfDay }
+                    scheduledTime: scheduledDateTime
                 });
 
                 if (!existing) {
                     await DoseLog.create({
                         userId: req.user.id,
                         prescriptionId: prescription._id,
-                        scheduledTime: time,
-                        scheduledDate: startOfDay,
+                        scheduledTime: scheduledDateTime,
                         status: 'pending'
                     });
                 }
@@ -35,7 +37,7 @@ const getTodayDoses = async (req, res, next) => {
 
         const doses = await DoseLog.find({
             userId: req.user.id,
-            scheduledDate: { $gte: startOfDay, $lte: endOfDay }
+            scheduledTime: { $gte: startOfDay, $lte: endOfDay }
         })
             .populate('prescriptionId', 'medicineName dosage')
             .sort({ scheduledTime: 1 });
