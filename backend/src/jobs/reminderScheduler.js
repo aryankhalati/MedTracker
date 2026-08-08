@@ -6,17 +6,15 @@ const sendEmail = require('../utils/sendEmail');
 
 const checkAndSendReminders = async () => {
     const now = new Date();
-    const currentTime = now.toTimeString().slice(0, 5);
 
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
+    // Build a window covering "this minute" so we catch doses scheduled at exactly now
+    const windowStart = new Date(now);
+    windowStart.setSeconds(0, 0);
+    const windowEnd = new Date(windowStart.getTime() + 60 * 1000);
 
     const dueDoses = await DoseLog.find({
-        scheduledTime: currentTime,
-        status: 'pending',
-        scheduledDate: { $gte: startOfDay, $lte: endOfDay }
+        scheduledTime: { $gte: windowStart, $lt: windowEnd },
+        status: 'pending'
     });
 
     for (const dose of dueDoses) {
@@ -25,10 +23,16 @@ const checkAndSendReminders = async () => {
 
         if (!user || !prescription) continue;
 
+        const timeLabel = dose.scheduledTime.toLocaleTimeString('en-IN', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
+
         await sendEmail(
             user.email,
             'Time to take your medicine',
-            `<p>Hi ${user.name},</p><p>It's time to take your <strong>${prescription.medicineName} (${prescription.dosage})</strong> — scheduled dose at ${dose.scheduledTime}.</p>`
+            `<p>Hi ${user.name},</p><p>It's time to take your <strong>${prescription.medicineName} (${prescription.dosage})</strong> — scheduled dose at ${timeLabel}.</p>`
         );
     }
 };

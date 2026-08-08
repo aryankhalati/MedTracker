@@ -8,6 +8,7 @@ import AdherenceStats from "../components/AdherenceStats";
 export default function Dashboard() {
   const [prescriptions, setPrescriptions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const fetchPrescriptions = async () => {
     const res = await api.get("/prescriptions");
@@ -22,8 +23,8 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <AdherenceStats />
-      <DoseChecklist />
+      <AdherenceStats refreshTrigger={refreshTrigger} />
+      <DoseChecklist onDoseUpdate={() => setRefreshTrigger((prev) => prev + 1)} />
 
       <PrescriptionForm onCreated={fetchPrescriptions} />
 

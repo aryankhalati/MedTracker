@@ -31,7 +31,14 @@ export default function DoseChecklist() {
           <div key={dose._id} className={`dose-item dose-${dose.status}`}>
             <div className="dose-info">
               <strong>{dose.prescriptionId?.medicineName}</strong>
-              <span>{dose.prescriptionId?.dosage} — {dose.scheduledTime}</span>
+             <span>
+  {dose.prescriptionId?.dosage} —{" "}
+  {new Date(dose.scheduledTime).toLocaleTimeString('en-IN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  })}
+</span>
             </div>
             <div className="dose-actions">
               {dose.status === "pending" ? (

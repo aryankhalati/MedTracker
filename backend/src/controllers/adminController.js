@@ -52,7 +52,7 @@ const updateOrderStatus = async (req, res, next) => {
                 deliveredAt: status === 'delivered' ? new Date() : null
             },
             { new: true }
-        );
+        ).populate('userId', 'name email');
 
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
