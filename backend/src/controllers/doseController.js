@@ -3,10 +3,13 @@ const Prescription = require('../models/Prescription');
 
 const getTodayDoses = async (req, res, next) => {
     try {
-        const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
-        const endOfDay = new Date();
-        endOfDay.setHours(23, 59, 59, 999);
+        // Get "today" in IST regardless of server's own timezone (Render runs UTC)
+        const now = new Date();
+        const istOffset = 5.5 * 60 * 60 * 1000; // IST = UTC+5:30
+        const istNow = new Date(now.getTime() + istOffset);
+
+        const startOfDay = new Date(Date.UTC(istNow.getUTCFullYear(), istNow.getUTCMonth(), istNow.getUTCDate()) - istOffset);
+        const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000 - 1);
 
         const activePrescriptions = await Prescription.find({
             userId: req.user.id,
@@ -16,8 +19,7 @@ const getTodayDoses = async (req, res, next) => {
         for (const prescription of activePrescriptions) {
             for (const time of prescription.doseTimes) {
                 const [hours, minutes] = time.split(':').map(Number);
-                const scheduledDateTime = new Date(startOfDay);
-                scheduledDateTime.setHours(hours, minutes, 0, 0);
+                const scheduledDateTime = new Date(startOfDay.getTime() + (hours * 60 + minutes) * 60 * 1000);
 
                 const existing = await DoseLog.findOne({
                     prescriptionId: prescription._id,
