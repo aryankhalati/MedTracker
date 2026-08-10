@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 
-export default function DoseChecklist() {
+export default function DoseChecklist({ onDoseUpdate }) {
   const [doses, setDoses] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,6 +17,7 @@ export default function DoseChecklist() {
   const markStatus = async (id, status) => {
     await api.patch(`/doses/${id}`, { status });
     fetchDoses();
+    onDoseUpdate?.();
   };
 
   if (loading) return <p>Loading today's doses...</p>;

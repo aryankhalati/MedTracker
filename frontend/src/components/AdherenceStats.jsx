@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
 
-export default function AdherenceStats() {
+export default function AdherenceStats({ refreshTrigger }) {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
     api.get("/doses/adherence").then((res) => setStats(res.data));
-  }, []);
+  }, [refreshTrigger]);
 
   if (!stats) return null;
 
